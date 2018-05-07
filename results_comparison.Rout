@@ -1,0 +1,82 @@
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> data = read.csv("/Users/samweiss/src/hete_net/hete_data.csv")
+> data = data[,-1]
+> 
+> hete_tree = read.csv('/Users/samweiss/src/hete_net/hete_preditions_tree.csv')[,2]
+> hete_net = read.csv('/Users/samweiss/src/hete_net/hete_preditions_net.csv')[,2]
+> 
+> #x is the hete effect 
+> x = data[,'x']
+> 
+> 
+> pairs(cbind(x, hete_tree, hete_net))
+> 
+> 
+> lm_tree = lm(x ~ hete_tree)
+> lm_net = lm(x ~ hete_net)
+> 
+> 
+> print(summary(lm_tree))
+
+Call:
+lm(formula = x ~ hete_tree)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.00521 -0.23917  0.02503  0.22482  2.80063 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -0.021575   0.003379  -6.385 1.79e-10 ***
+hete_tree    1.444830   0.005207 277.485  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3379 on 9998 degrees of freedom
+Multiple R-squared:  0.8851,	Adjusted R-squared:  0.8851 
+F-statistic: 7.7e+04 on 1 and 9998 DF,  p-value: < 2.2e-16
+
+> print(summary(lm_net))
+
+Call:
+lm(formula = x ~ hete_net)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.31945 -0.01003 -0.00029  0.01099  1.35530 
+
+Coefficients:
+             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept) 0.0005717  0.0002438    2.345    0.019 *  
+hete_net    0.5096519  0.0001247 4087.666   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02437 on 9998 degrees of freedom
+Multiple R-squared:  0.9994,	Adjusted R-squared:  0.9994 
+F-statistic: 1.671e+07 on 1 and 9998 DF,  p-value: < 2.2e-16
+
+> 
+> proc.time()
+   user  system elapsed 
+  0.575   0.058   0.621 
