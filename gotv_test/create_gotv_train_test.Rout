@@ -1,0 +1,71 @@
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(hete)
+> library(tidyverse)
+── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
+✔ ggplot2 2.2.1     ✔ purrr   0.2.4
+✔ tibble  1.4.2     ✔ dplyr   0.7.4
+✔ tidyr   0.8.0     ✔ stringr 1.2.0
+✔ readr   1.1.1     ✔ forcats 0.3.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Warning messages:
+1: package ‘tibble’ was built under R version 3.4.3 
+2: package ‘tidyr’ was built under R version 3.4.3 
+3: package ‘forcats’ was built under R version 3.4.3 
+> data(gotv)
+> 
+> df <- gotv %>%
++   filter(treatment %in% c("Control", "Neighbors")) %>%
++   mutate(treatment = ifelse(treatment == "Control", 0, 1)) %>%
++   as.data.frame()
+> 
+> set.seed(25)
+> 
+> #use explanatory variable to create known interaction function
+> voted =  .1*df[,'treatment']*df[,'age'] +
++   .1*df[,'treatment']*df['hh_size'] + df[,'hh_size'] + (df[,'g2002']=="no")*1
+> 
+> voted = as.numeric(voted[,1])
+> voted = scale(voted)
+> voted = 1/(1+exp(-voted))
+> voted_1 = rbinom(length(voted),1,
++                  voted)
+> voted_2 = rep('Yes', length(voted_1))
+> voted_2[which(voted_1==0)] = 'No'
+> 
+> df[,'voted'] = as.factor(voted_2)
+> 
+> sample_train = sample(nrow(df), nrow(df)*2/3)
+> df_train = df[sample_train, ]
+> df_test = df[-sample_train, ]
+> 
+> m <- hete_single(voted ~ . | treatment, data = df_train, est = random_forest)
+> p <- predict(m, df_test)
+> write.csv(df_train, '/Users/samweiss/src/hete_net/gotv_train.csv', row.names = FALSE)
+> write.csv(df_test, '/Users/samweiss/src/hete_net/gotv_test.csv', row.names = FALSE)
+> write.csv(p, '/Users/samweiss/src/hete_net/hete_preditions_tree_gotv.csv', row.names = FALSE)
+> 
+> proc.time()
+   user  system elapsed 
+ 73.495   2.360  77.955 
