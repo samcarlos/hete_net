@@ -60,6 +60,6 @@ data_sets = [create_dataset(18000, 200, sen[0], sen[1]) for sen in scenarios]
 
 def save_scenario(data, j):
   list_of_names = ['y', 't', 'x', 't_x']
-  [pd.DataFrame(x).to_csv(os.getcwd()+'/created_data/scenario_'+str(j)+'_'+ list_of_names[i]+'.csv') for i,x  in enumerate(data) ]
+  [pd.DataFrame(x).to_csv(os.getcwd()+'/created_data/scenario_'+str(j)+'_'+ list_of_names[i]+'.csv', index = False) for i,x  in enumerate(data) ]
 
 [save_scenario(dat,j) for j, dat in enumerate(data_sets)]
