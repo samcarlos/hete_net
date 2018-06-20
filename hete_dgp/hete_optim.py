@@ -64,7 +64,7 @@ def hete_optim_action(input_shape, num_nodes, dropout, num_layers = 1, activatio
 
 def gridsearch_hete_optim_action(X_train, tmt_control,  y_train):
 
-    param_grid = dict(num_nodes = [16, 64, 256], dropout = [.9, .5,.75], activation = [lelu, 'relu'], num_layers = [1,2])
+    param_grid = dict(num_nodes = [32,256], dropout = [.5,.75], activation = [lelu, 'relu'], num_layers = [1,2,3])
 
     grid = ParameterGrid(param_grid)
 

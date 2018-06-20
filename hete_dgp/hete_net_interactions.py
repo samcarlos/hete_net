@@ -57,7 +57,9 @@ def hete_model(input_shape , num_nodes=256, dropout = .5, num_layers = 1, activa
 
 
 def gridsearch_hete_model(X_train, X_train_control, y_train):
-    param_grid = dict(num_nodes = [16, 64, 256], dropout = [.9, .5,.75], activation = [lelu, 'relu'], num_layers = [1,2])
+    param_grid = dict(num_nodes = [32,256], dropout = [.5,.75], activation = [lelu, 'relu'], num_layers = [1,2,3])
+    grid = ParameterGrid(param_grid)
+
     from sklearn.model_selection import KFold
     kf = KFold(n_splits=3)
     kf.get_n_splits(y_train)
