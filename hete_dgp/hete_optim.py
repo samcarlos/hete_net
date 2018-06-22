@@ -64,7 +64,7 @@ def hete_optim_action(input_shape, num_nodes, dropout, num_layers = 1, activatio
 
 def gridsearch_hete_optim_action(X_train, tmt_control,  y_train):
 
-    param_grid = dict(num_nodes = [32,256], dropout = [.5,.75], activation = [lelu, 'relu'], num_layers = [1,2,3])
+    param_grid = dict(num_nodes = [32,128, 256], dropout = [.5], activation = [lelu, 'relu'], num_layers = [1,2])
 
     grid = ParameterGrid(param_grid)
 
@@ -87,7 +87,7 @@ def gridsearch_hete_optim_action(X_train, tmt_control,  y_train):
                 params['num_layers'], activation =  params['activation'])
 
             mod.fit([X_train[train_index], X_train[train_index][:,0]],
-                    dummy_y_train[train_index], epochs = 100)
+                    dummy_y_train[train_index], epochs = 50)
 
             preds = mod.predict([X_train[test_index], X_train[test_index][:,0]])
 
@@ -109,6 +109,6 @@ def gridsearch_hete_optim_action(X_train, tmt_control,  y_train):
                 optim_grid['num_layers'], activation =  optim_grid['activation'])
 
     mod.fit([X_train, X_train[:,0]],
-                    dummy_y_train, epochs = 100)
+                    dummy_y_train, epochs = 50)
 
     return(mod)

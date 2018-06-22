@@ -57,7 +57,7 @@ def hete_model(input_shape , num_nodes=256, dropout = .5, num_layers = 1, activa
 
 
 def gridsearch_hete_model(X_train, X_train_control, y_train):
-    param_grid = dict(num_nodes = [32,256], dropout = [.5,.75], activation = [lelu, 'relu'], num_layers = [1,2,3])
+    param_grid = dict(num_nodes = [32,128, 256], dropout = [.5], activation = [lelu, 'relu'], num_layers = [1,2])
     grid = ParameterGrid(param_grid)
 
     from sklearn.model_selection import KFold
@@ -71,7 +71,7 @@ def gridsearch_hete_model(X_train, X_train_control, y_train):
             mod , base = hete_model(X_train.shape[1], params['num_nodes'], params['dropout'],
                 params['num_layers'], activation =  params['activation'])
             mod.fit([X_train[train_index], X_train_control[train_index]],
-                    y_train[train_index], epochs = 100)
+                    y_train[train_index], epochs = 50)
 
             preds = mod.predict([X_train[test_index], X_train_control[test_index]])
 
@@ -86,5 +86,5 @@ def gridsearch_hete_model(X_train, X_train_control, y_train):
     mod , base = hete_model(X_train.shape[1], optim_grid['num_nodes'], optim_grid['dropout'],
                 optim_grid['num_layers'], activation =  optim_grid['activation'])
     mod.fit([X_train, X_train_control],
-                    y_train, epochs = 100)
+                    y_train, epochs = 50)
     return([mod, base])
