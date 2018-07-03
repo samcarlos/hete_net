@@ -48,10 +48,10 @@ def create_dataset(n_obs, p_over_2, main_effects, interactions):
     u_x = main_effects(x)
     t_x = interactions(x)
     y_mean = u_x + (t - .5) * t_x
-    y = np.random.normal( y_mean ,1,n_obs)
-    y = 1/(1+np.exp(-y))
+    y_mean = np.random.normal( y_mean ,1,n_obs)
+    y = 1/(1+np.exp(-y_mean))
     y = np.random.binomial(1, y, n_obs)
-    return([y, t, x, t_x])
+    return([y, t, x, t_x, y_mean])
 
 
 scenarios = [[f_8,f_1], [f_5, f_6], [f_4, f_3], [f_7,f_4], [f_3,f_5], [f_1, f_6], [f_2,f_7], [f_6,f_8]]
@@ -59,7 +59,7 @@ scenarios = [[f_8,f_1], [f_5, f_6], [f_4, f_3], [f_7,f_4], [f_3,f_5], [f_1, f_6]
 data_sets = [create_dataset(18000, 200, sen[0], sen[1]) for sen in scenarios]
 
 def save_scenario(data, j):
-  list_of_names = ['y', 't', 'x', 't_x']
+  list_of_names = ['y', 't', 'x', 't_x','y_mean']
   [pd.DataFrame(x).to_csv(os.getcwd()+'/created_data/scenario_'+str(j)+'_'+ list_of_names[i]+'.csv', index = False) for i,x  in enumerate(data) ]
 
 [save_scenario(dat,j) for j, dat in enumerate(data_sets)]
